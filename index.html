@@ -67,29 +67,7 @@
     </div>
 </div>
 
-<div id="chatbot-container"></div>
-
 <script src="login.js"></script>
-
-<script>
-    // Friend's Asynchronous Chatbot HTML Injector Execution Thread
-    fetch('chatbot.html')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('chatbot-container').innerHTML = html;
-            const scripts = document.getElementById('chatbot-container').getElementsByTagName('script');
-            for (let i = 0; i < scripts.length; i++) {
-                if (scripts[i].innerText) {
-                    eval(scripts[i].innerText);
-                } else {
-                    const newScript = document.createElement('script');
-                    newScript.src = scripts[i].src;
-                    document.body.appendChild(newScript);
-                }
-            }
-        })
-        .catch(err => console.error('Chatbot component could not render asynchronously:', err));
-</script>
 
 </body>
 </html>
