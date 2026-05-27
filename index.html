@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Portal - Authentication</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; }
+        
+        .login-container { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 40px; width: 100%; max-width: 440px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); color: white; transition: all 0.3s ease; }
+        
+        h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; background: linear-gradient(to right, #10b981, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 14px; color: #94a3b8; text-align: center; margin-bottom: 25px; }
+        
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input { width: 100%; padding: 12px 16px; background: rgba(15, 23, 42, 0.6); border: 1px solid #334155; border-radius: 8px; color: white; font-size: 15px; transition: all 0.3s ease; }
+        input:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+        
+        /* Hide fields conditionally via JS state updates */
+        .signup-only { display: none; }
+        
+        button { width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 15px; }
+        button:hover { background: #059669; transform: translateY(-1px); }
+        
+        .toggle-link { font-size: 14px; color: #94a3b8; text-align: center; margin-top: 25px; }
+        .toggle-link span { color: #3b82f6; cursor: pointer; font-weight: 600; text-decoration: underline; }
+        .toggle-link span:hover { color: #60a5fa; }
+        
+        #chatbot-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2 id="formTitle">Login to Portal</h2>
+    <p class="subtitle" id="authSubtitle">Log in to manage your rental listings</p>
+    
+    <form id="authForm">
+        <div class="form-group signup-only" id="nameFieldGroup">
+            <label for="authName">User Name</label>
+            <input type="text" id="authName" placeholder="Enter Full Name">
+        </div>
+
+        <div class="form-group signup-only" id="phoneFieldGroup">
+            <label for="authPhone">Mobile Number</label>
+            <input type="tel" id="authPhone" placeholder="Enter 10-Digit Mobile No.">
+        </div>
+
+        <div class="form-group">
+            <label for="authEmail">Email Address</label>
+            <input type="email" id="authEmail" placeholder="Email Address" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="authPassword">Password</label>
+            <input type="password" id="authPassword" placeholder="Password" required>
+        </div>
+        
+        <button type="submit" id="submitBtn">Login</button>
+    </form>
+
+    <div class="toggle-link" id="toggleContainer">
+        Don't have an account? <span id="switchMode">Sign Up</span>
+    </div>
+</div>
+
+<div id="chatbot-container"></div>
+
+<script src="login.js"></script>
+
+<script>
+    // Friend's Asynchronous Chatbot HTML Injector Execution Thread
+    fetch('chatbot.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('chatbot-container').innerHTML = html;
+            const scripts = document.getElementById('chatbot-container').getElementsByTagName('script');
+            for (let i = 0; i < scripts.length; i++) {
+                if (scripts[i].innerText) {
+                    eval(scripts[i].innerText);
+                } else {
+                    const newScript = document.createElement('script');
+                    newScript.src = scripts[i].src;
+                    document.body.appendChild(newScript);
+                }
+            }
+        })
+        .catch(err => console.error('Chatbot component could not render asynchronously:', err));
+</script>
+
+</body>
+</html>
